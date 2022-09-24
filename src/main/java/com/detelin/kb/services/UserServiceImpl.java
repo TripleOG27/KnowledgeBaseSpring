@@ -3,10 +3,14 @@ package com.detelin.kb.services;
 import com.detelin.kb.domain.models.service.UserServiceModel;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class UserServiceImpl implements UserService{
+    public UserServiceImpl() {
+    }
+
     @Override
     public UserServiceModel registerUser(UserServiceModel userServiceModel) {
         return null;
