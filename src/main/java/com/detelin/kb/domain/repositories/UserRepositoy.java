@@ -9,12 +9,12 @@ import org.springframework.security.config.core.userdetails.UserDetailsMapFactor
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-//@Repository
-//public interface UserRepositoy extends JpaRepository<User,String> {
-//    @Autowired
-//    Optional<User> findByUsername(String username);
-//    @Autowired
-//    Optional<User> findById(String id);
-//    @Autowired
-//    Optional<User> findUserByStatusEqualsAndAuthoritiesContains(UserStatus status, Role role);
-//}
+@Repository
+public interface UserRepositoy extends JpaRepository<User,String> {
+    @Autowired
+    Optional<User> findByUsername(String username);
+    @Autowired
+    Optional<User> findById(String id);
+    @Autowired
+    Optional<User> findUserByStatusEqualsAndAuthoritiesContains(UserStatus status, Role role);
+}

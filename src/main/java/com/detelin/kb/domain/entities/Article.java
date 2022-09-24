@@ -1,9 +1,6 @@
 package com.detelin.kb.domain.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "articles")
@@ -24,8 +21,8 @@ public class Article extends BaseEntity{
     public void setTitle(String title) {
         this.title = title;
     }
-    @Column(name = "user_id")
-    @OneToMany(targetEntity = User.class,mappedBy = "user_id")
+    @JoinColumn(name = "user_id")
+    @ManyToOne(targetEntity = User.class,fetch = FetchType.EAGER)
     public String getAuthor() {
         return author;
     }
@@ -41,7 +38,7 @@ public class Article extends BaseEntity{
     public void setDescription(String description) {
         this.description = description;
     }
-    @Column(name = "title",columnDefinition = "TEXT",nullable = true)
+    @Column(name = "steps",columnDefinition = "TEXT",nullable = true)
     public String getLongText() {
         return longText;
     }
