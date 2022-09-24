@@ -2,6 +2,7 @@ package com.detelin.kb.domain.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -23,7 +24,8 @@ public class Article extends BaseEntity{
     public void setTitle(String title) {
         this.title = title;
     }
-
+    @Column(name = "user_id")
+    @OneToMany(targetEntity = User.class,mappedBy = "user_id")
     public String getAuthor() {
         return author;
     }
