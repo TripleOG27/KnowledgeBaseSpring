@@ -1,6 +1,7 @@
 package com.detelin.kb.services;
 
 import com.detelin.kb.domain.models.service.RoleServiceModel;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 

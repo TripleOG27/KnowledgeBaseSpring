@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-@Service
+
 public interface UserService extends UserDetailsService {
     UserServiceModel registerUser(UserServiceModel userServiceModel);
     UserServiceModel findUserByUsername(String username);
@@ -17,5 +17,4 @@ public interface UserService extends UserDetailsService {
     void setStatus(String id,String status);
     UserServiceModel editUserProfile(UserServiceModel userServiceModel, String oldPassword);
 
-    UserServiceModel findAnActiveUserToAssignACase();
 }

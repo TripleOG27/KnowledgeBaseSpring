@@ -9,10 +9,10 @@
             <div class="collapse navbar-collapse d-flex justify-content-end" id="guestNav">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <a class="nav-link" th:href="@{/users/login}">Login</a>
+                        <a class="nav-link" th:href="@{/user/login}">Login</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" th:href="@{/users/register}">Register</a>
+                        <a class="nav-link" th:href="@{/user/register}">Register</a>
                     </li>
                 </ul>
             </div>
@@ -32,7 +32,7 @@
                         <a class="nav-link" th:href="@{/cases/all}">My Open Cases</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-tabs" th:href="@{/users/edit}" th:text="${username}">Profile</a>
+                        <a class="nav-tabs" th:href="@{/user/edit}" th:text="${username}">Profile</a>
                     </li>
                     <!--developer role to be able to add new products-->
                     <th:block sec:authorize="hasRole('ROLE_DEVELOPER')">
@@ -68,7 +68,7 @@
                     </th:block>
                     <th:block sec:authorize="hasAnyRole('ROLE_ROOT','ROLE_TSM')">
                         <li class="nav-item active">
-                            <a class="nav-tabs" th:href="@{/users/all}">All Users</a>
+                            <a class="nav-tabs" th:href="@{/user/all}">All Users</a>
                         </li>
 
                     </th:block>

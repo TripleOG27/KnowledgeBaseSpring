@@ -1,21 +1,22 @@
-package com.detelin.kb.domain.models.service;
+package com.detelin.kb.domain.models.view;
 
+import com.detelin.kb.GlobalConstants;
 import com.detelin.kb.domain.enums.UserStatus;
 
 import java.time.LocalDate;
 import java.util.Set;
 
-public class UserServiceModel extends BaseServiceModel{
+public class UserAllViewModel {
     private String id;
     private String username;
-    private String password;
     private String email;
-    private LocalDate created;
     private UserStatus status;
-    private Set<RoleServiceModel> authorities;
+    private LocalDate created;
+    private Set<String> authorities;
+    private String highestAuthority;
     private String imageUrl;
 
-    public UserServiceModel() {
+    public UserAllViewModel() {
     }
 
     public String getUsername() {
@@ -26,14 +27,6 @@ public class UserServiceModel extends BaseServiceModel{
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -42,11 +35,19 @@ public class UserServiceModel extends BaseServiceModel{
         this.email = email;
     }
 
-    public Set<RoleServiceModel> getAuthorities() {
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+
+    public Set<String> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Set<RoleServiceModel> authorities) {
+    public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
     }
 
@@ -58,28 +59,30 @@ public class UserServiceModel extends BaseServiceModel{
         this.created = created;
     }
 
-    public UserStatus getStatus() {
-        return status;
+    public String getHighestAuthority() {
+        return highestAuthority;
     }
 
-    public void setStatus(UserStatus status) {
-        this.status = status;
+    public void setHighestAuthority() {
+        if(authorities.contains(GlobalConstants.ROOT_ROLE))this.highestAuthority = "Root";
+        else if(authorities.contains(GlobalConstants.EDITOR_ROLE))this.highestAuthority = "Editor";
+        else if(authorities.contains(GlobalConstants.AUTHOR_ROLE))this.highestAuthority = "Author";
+        else if(authorities.contains(GlobalConstants.GUEST_ROLE))this.highestAuthority = "Guest";
+        else this.highestAuthority = "Customer";
     }
 
 //    public String getImageUrl() {
 //        return imageUrl;
 //    }
-
+//
 //    public void setImageUrl(String imageUrl) {
 //        this.imageUrl = imageUrl;
 //    }
 
-    @Override
     public String getId() {
         return id;
     }
 
-    @Override
     public void setId(String id) {
         this.id = id;
     }

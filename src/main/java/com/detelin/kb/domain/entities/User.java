@@ -13,7 +13,7 @@ public class User extends BaseEntity implements UserDetails {
     private String username;
     private String password;
     private String email;
-    private String imageUrl;
+//    private String imageUrl;
     private UserStatus status;
     private LocalDate created;
     private Set<Role> authorities;
@@ -106,18 +106,18 @@ public class User extends BaseEntity implements UserDetails {
         this.created = created;
     }
 
-    @PrePersist()
-    void preInsertDefaultImage() {
-        if (this.imageUrl == null)
-            this.imageUrl = "https://i2.wp.com/wimcanada.org/wp-content/uploads/2015/11/empty-profile.jpg";
-    }
-
-    @Column(name = "image_url")
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+//    @PrePersist()
+//    void preInsertDefaultImage() {
+//        if (this.imageUrl == null)
+//            this.imageUrl = "https://i2.wp.com/wimcanada.org/wp-content/uploads/2015/11/empty-profile.jpg";
+//    }
+//
+//    @Column(name = "image_url")
+//    public String getImageUrl() {
+//        return imageUrl;
+//    }
+//
+//    public void setImageUrl(String imageUrl) {
+//        this.imageUrl = imageUrl;
+//    }
 }

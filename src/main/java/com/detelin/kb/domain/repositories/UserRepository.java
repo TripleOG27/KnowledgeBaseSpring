@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 @Repository
-public interface UserRepositoy extends JpaRepository<User,String> {
+public interface UserRepository extends JpaRepository<User,String> {
     @Autowired
     Optional<User> findByUsername(String username);
     @Autowired
