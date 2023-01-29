@@ -20,7 +20,7 @@
     </th:block>
     <th:block sec:authorize="isAuthenticated()">
         <nav class="navbar navbar-expand-lg navbar-light bg-light rounded font-weight-bold">
-            <a class="navbar-brand" th:href="@{/home}" style="color: #5e9ca0;"><em>Knowledge Base</em></a>
+            <a class="navbar-brand" th:href="@{/}" style="color: #5e9ca0;"><em>Knowledge Base</em></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#userNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -35,21 +35,21 @@
                         <a class="nav-tabs" th:href="@{/user/edit}" th:text="${username}">Profile</a>
                     </li>
                     <!--developer role to be able to add new products-->
-                    <th:block sec:authorize="hasRole('ROLE_DEVELOPER')">
-                        <a class="nav-tabs" th:href="@{/products/add}">Add Product</a>
+                    <th:block sec:authorize="hasRole('ROLE_ROOT')">
+                        <a class="nav-tabs" th:href="@{/user/userList}">Manage Users and Groups</a>
                     </th:block>
-                    <th:block sec:authorize="hasAnyRole('ROLE_ROOT','ROLE_TSM','ROLE_TSE','ROLE_CLIENT')">
+                    <th:block sec:authorize="hasAnyRole('ROLE_ROOT')">
                         <li class="nav-item active">
                             <div class="dropdown show">
                                 <a class="nav-link active dropdown-toggle" href="#" role="button" id="moderatorDropdown"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Cases
+                                    Articles
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="moderatorDropdown">
-                                    <a class="dropdown-item" th:href="@{/cases/view_open}">Active Cases</a>
-                                    <a class="dropdown-item" th:href="@{/cases/view_closed}">Closed Cases</a>
+                                    <a class="dropdown-item" th:href="@{/articles/all_articles}">All Articles</a>
+                                    <a class="dropdown-item" th:href="@{/articles/my}">My Articles</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" th:href="@{/cases/open}">Open Case</a>
+                                    <a class="dropdown-item" th:href="@{/articles/draft}">Draft Articles</a>
                                 </div>
                             </div>
                         </li>

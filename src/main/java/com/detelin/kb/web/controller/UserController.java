@@ -66,6 +66,12 @@ public class UserController extends BaseController{
         return super.view("user/login");
     }
 
+//    @PostMapping("/login")
+//    @PreAuthorize("isAuthenticated()")
+//    public ModelAndView loginConfirm() {
+//        return super.redirect("index");
+//    }
+
     @GetMapping("/edit")
     @PreAuthorize("isAuthenticated()")
     @PageTitle("Edit Profile")
@@ -89,8 +95,8 @@ public class UserController extends BaseController{
         return super.redirect("/index");
     }
 
-    @GetMapping("/all")
-    @PreAuthorize("hasAnyRole('ROLE_TSM','ROLE_PRIVILEGES')")
+    @GetMapping("/userList")
+    @PreAuthorize(value = "hasAnyRole('ROLE_ROOT','ROOT_ROLE')")
     @PageTitle("All Users")
     public ModelAndView allUsers(ModelAndView modelAndView) {
         List<UserAllViewModel> users = this.userService.findAllUsers()
@@ -103,9 +109,9 @@ public class UserController extends BaseController{
                 })
                 .collect(Collectors.toList());
 
-        modelAndView.addObject("user", users);
+        modelAndView.addObject("users", users);
 
-        return super.view("user/all-users", modelAndView);
+        return super.view("user/userList", modelAndView);
     }
     @GetMapping("/privilege/{id}")
     @PreAuthorize("hasAnyRole('ROLE_PRIVILEGES')")
@@ -132,7 +138,6 @@ public class UserController extends BaseController{
     @PostMapping("/status/{id}")
     @PreAuthorize("hasAnyRole('ROLE_TSM')")
     public ModelAndView setUserStatus(@PathVariable String id,@RequestParam(name = "status",required = false)String status ) {
-        int b=5;
         this.userService.setStatus(id, status);
 
         return super.redirect("/user/all");

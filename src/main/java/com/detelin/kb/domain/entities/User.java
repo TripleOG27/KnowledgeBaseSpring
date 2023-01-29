@@ -4,6 +4,7 @@ import com.detelin.kb.domain.enums.UserStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -17,7 +18,15 @@ public class User extends BaseEntity implements UserDetails {
     private UserStatus status;
     private LocalDate created;
     private Set<Role> authorities;
+    private Set<Article> articles;
+    @OneToMany(targetEntity = Article.class,cascade = CascadeType.ALL)
+    public Set<Article> getArticles() {
+        return articles;
+    }
 
+    public void setArticles(Set<Article> articles) {
+        this.articles = articles;
+    }
 
     public User() {
     }
@@ -76,7 +85,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Override
-    @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     public Set<Role> getAuthorities() {
@@ -106,7 +115,7 @@ public class User extends BaseEntity implements UserDetails {
         this.created = created;
     }
 
-//    @PrePersist()
+    //    @PrePersist()
 //    void preInsertDefaultImage() {
 //        if (this.imageUrl == null)
 //            this.imageUrl = "https://i2.wp.com/wimcanada.org/wp-content/uploads/2015/11/empty-profile.jpg";
