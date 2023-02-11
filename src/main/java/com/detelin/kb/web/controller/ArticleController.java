@@ -2,12 +2,15 @@ package com.detelin.kb.web.controller;
 
 import com.detelin.kb.domain.models.binding.ArticleCreateBindingModel;
 import com.detelin.kb.domain.models.service.ArticleServiceModel;
+import com.detelin.kb.domain.models.service.UserServiceModel;
+import com.detelin.kb.domain.models.view.ArticleViewModel;
 import com.detelin.kb.services.ArticleService;
 import com.detelin.kb.services.UserService;
 import com.detelin.kb.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -49,11 +52,8 @@ public class ArticleController extends BaseController{
     @PreAuthorize(value = "isAuthenticated()")
     public ModelAndView createArticleConfirm(@ModelAttribute ArticleCreateBindingModel articleCreateBindingModel, Principal principal, RedirectAttributes redirectAttributes){
         articleCreateBindingModel.setCreatedDate(LocalDate.now());
-        articleCreateBindingModel.setAuthor(userService.findUserByUsername(principal.getName()).getId());
-        return super.redirect("/articles/view/" +
-                (articleService.createArticle(this.mapper.map(articleCreateBindingModel, ArticleServiceModel.class)))
-                        .getId()
-        );
+        ArticleViewModel article = articleService.createArticle(articleCreateBindingModel, principal.getName());
+        return super.redirect("/articles/view/" + article.getId());
 
     }
     @GetMapping("/view/{id}")

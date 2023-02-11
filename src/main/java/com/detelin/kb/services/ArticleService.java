@@ -1,5 +1,6 @@
 package com.detelin.kb.services;
 
+import com.detelin.kb.domain.models.binding.ArticleCreateBindingModel;
 import com.detelin.kb.domain.models.service.ArticleServiceModel;
 import com.detelin.kb.domain.models.view.ArticleViewModel;
 
@@ -11,6 +12,6 @@ public interface ArticleService {
     List<ArticleServiceModel> findArticleByWordInDescription(String wordInDescription);
     List<ArticleServiceModel> findAll();
 
-    ArticleViewModel createArticle(ArticleServiceModel articleServiceModel);
+    ArticleViewModel createArticle(ArticleCreateBindingModel articleServiceModel, String authorName);
     ArticleViewModel viewArticle(String id);
 }

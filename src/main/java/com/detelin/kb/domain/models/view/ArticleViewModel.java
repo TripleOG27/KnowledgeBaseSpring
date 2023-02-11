@@ -1,10 +1,12 @@
 package com.detelin.kb.domain.models.view;
 
+import com.detelin.kb.domain.entities.User;
+
 import java.time.LocalDate;
 
 public class ArticleViewModel extends BaseViewModel{
     private String title;
-    private String author;
+    private User author;
     private String description;
     private String longText;
     private String workaround;
@@ -21,11 +23,11 @@ public class ArticleViewModel extends BaseViewModel{
         this.title = title;
     }
 
-    public String getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 

@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Table(name = "articles")
 public class Article extends BaseEntity{
     private String title;
-    private String author;
+    private User author;
     private String description;
     private String longText;
     private String workaround;
@@ -27,11 +27,11 @@ public class Article extends BaseEntity{
 
     @JoinColumn( name= "user_id",referencedColumnName = "id")
     @ManyToOne(targetEntity = User.class,fetch = FetchType.EAGER)
-    public String getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
     @Column(name = "description",nullable = true)

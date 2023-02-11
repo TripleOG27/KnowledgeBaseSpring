@@ -1,9 +1,11 @@
 package com.detelin.kb.services;
 
 import com.detelin.kb.domain.entities.Article;
+import com.detelin.kb.domain.models.binding.ArticleCreateBindingModel;
 import com.detelin.kb.domain.models.service.ArticleServiceModel;
 import com.detelin.kb.domain.models.view.ArticleViewModel;
 import com.detelin.kb.domain.repositories.ArticleRepository;
+import com.detelin.kb.domain.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +14,12 @@ import java.util.List;
 public class ArticleServiceimpl  implements ArticleService{
     private final ArticleRepository articleRepository;
     private final ModelMapper mapper;
+    private final UserRepository userRepository;
 
-    public ArticleServiceimpl(ArticleRepository articleRepository, ModelMapper mapper) {
+    public ArticleServiceimpl(ArticleRepository articleRepository, ModelMapper mapper, UserRepository userRepository) {
         this.articleRepository = articleRepository;
         this.mapper = mapper;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -39,10 +43,10 @@ public class ArticleServiceimpl  implements ArticleService{
     }
 
     @Override
-    public ArticleViewModel createArticle(ArticleServiceModel articleServiceModel) {
-        articleRepository.saveAndFlush(this.mapper.map(articleServiceModel, Article.class));
-        ArticleViewModel articleViewModel = mapper.map(articleRepository.findById(articleServiceModel.getId()).orElse(null),ArticleViewModel.class);
-        return articleViewModel;
+    public ArticleViewModel createArticle(ArticleCreateBindingModel articleCreateBindingModel, String _authorName) {
+        articleCreateBindingModel.setAuthor(userRepository.findByUsername(_authorName).orElse(null));
+        Article savedArticle = articleRepository.save(this.mapper.map(articleCreateBindingModel, Article.class));
+        return mapper.map(savedArticle,ArticleViewModel.class);
     }
 
     @Override
