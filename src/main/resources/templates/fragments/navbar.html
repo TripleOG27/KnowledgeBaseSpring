@@ -1,4 +1,4 @@
-<th:block xmlns:th="http://www.w3.org/1999/xhtml">
+<th:block xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <th:block sec:authorize="isAnonymous()">
         <nav class="navbar navbar-expand-lg navbar-light bg-light rounded font-weight-bold">
             <a class="navbar-brand" th:href="@{/}" style="color: #5e9ca0;"><em>Knowledge Base</em></a>
@@ -34,11 +34,11 @@
                     <li class="nav-item active">
                         <a class="nav-tabs" th:href="@{/user/edit}" th:text="${username}">Profile</a>
                     </li>
-                    <!--developer role to be able to add new products-->
-                    <th:block sec:authorize="hasRole('ROLE_ROOT')">
+                    <!--root role to be able to manage users-->
+                    <th:block sec:authorize="hasAuthority('ROLE_ROOT')">
                         <a class="nav-tabs" th:href="@{/user/userList}">Manage Users and Groups</a>
                     </th:block>
-                    <th:block sec:authorize="hasAnyRole('ROLE_ROOT')">
+                    <th:block sec:authorize="hasAuthority('AUTHOR_ROLE')">
                         <li class="nav-item active">
                             <div class="dropdown show">
                                 <a class="nav-link active dropdown-toggle" href="#" role="button" id="moderatorDropdown"
@@ -54,16 +54,16 @@
                             </div>
                         </li>
                     </th:block>
-                    <th:block sec:authorize="hasRole('ROLE_MANAGER')">
+                    <th:block sec:authorize="hasAuthority('ROLE_MANAGER')">
                         <a class="nav-tabs" th:href="@{/licenses/add}">Add License</a>
                     </th:block>
-                    <th:block sec:authorize="hasRole('ROLE_MANAGER')">
+                    <th:block sec:authorize="hasAuthority('ROLE_MANAGER')">
                         <a class="nav-tabs" th:href="@{/licenses/all}">All Licenses</a>
                     </th:block>
-                    <th:block sec:authorize="hasRole('ROLE_CLIENT')">
+                    <th:block sec:authorize="hasAuthority('ROLE_CLIENT')">
                         <a class="nav-tabs" th:href="@{/licenses/purchase}">Purchase License</a>
                     </th:block>
-                    <th:block sec:authorize="hasRole('ROLE_CLIENT')">
+                    <th:block sec:authorize="hasAuthority('ROLE_CLIENT')">
                         <a class="nav-tabs" th:href="@{/licenses/my}">My Licenses</a>
                     </th:block>
                     <th:block sec:authorize="hasAnyRole('ROLE_ROOT','ROLE_TSM')">

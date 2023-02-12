@@ -1,6 +1,6 @@
 package com.detelin.kb.domain.models.service;
 
-public class RoleServiceModel {
+public class RoleServiceModel extends BaseServiceModel {
     private String authority;
 
     public RoleServiceModel() {

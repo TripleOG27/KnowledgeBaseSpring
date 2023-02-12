@@ -31,7 +31,7 @@
     </div>
 
     <hr class="hr-2 bg-dark w-25">
-    <div class="button-holder d-flex justify-content-center">
+    <div th:if="${article.author.id}==${userid} or ${#authorization.expression('hasAuthority(''EDITOR_ROLE'')')}" class="button-holder d-flex justify-content-center">
       <button type="submit" class="btn btn-success">Edit</button>
     </div>
   </form>

@@ -38,7 +38,7 @@ public class ArticleController extends BaseController{
     @PageTitle("All articles")
     public ModelAndView getAllArticles(ModelAndView modelAndView, Principal principal){
         modelAndView.addObject("articles",this.articleService.findAll());
-        modelAndView.addObject("username",principal.getName());
+        modelAndView.addObject("userid",getLoggedInUserId(principal));
         return super.view("article/all_articles",modelAndView);
     }
 
@@ -58,8 +58,9 @@ public class ArticleController extends BaseController{
     }
     @GetMapping("/view/{id}")
     @PageTitle("View article")
-    public ModelAndView viewArticle(@PathVariable String id, ModelAndView modelAndView){
+    public ModelAndView viewArticle(@PathVariable String id, ModelAndView modelAndView,Principal principal){
         modelAndView.addObject("article",articleService.viewArticle(id));
+        modelAndView.addObject("userid",getLoggedInUserId(principal));
         return super.view("article/articleView",modelAndView);
     }
     @PostMapping("/edit/{id}")
@@ -81,8 +82,11 @@ public class ArticleController extends BaseController{
             id=userService.findUserByUsername(principal.getName()).getId();
         }
         modelAndView.addObject("articles",this.articleService.findAllByAuthorId(id));
-        modelAndView.addObject("username",principal.getName());
+        modelAndView.addObject("userid",getLoggedInUserId(principal));
         return super.view("article/all_articles",modelAndView);
+    }
+    private String getLoggedInUserId(Principal principal){
+        return userService.findUserByUsername(principal.getName()).getId();
     }
 
 }

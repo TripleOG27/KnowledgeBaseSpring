@@ -39,12 +39,13 @@ public class UserServiceImpl implements UserService{
             userServiceModel.setAuthorities(new LinkedHashSet<>());
             userServiceModel.getAuthorities().add(this.roleService.findByAuthority(GlobalConstants.AUTHOR_ROLE));
         }
-
         User user = this.mapper.map(userServiceModel,User.class);
         user.setPassword(this.bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
         user.setStatus(UserStatus.ACTIVE);
         user.setCreated(LocalDate.now());
-        return this.mapper.map(this.userRepository.saveAndFlush(user),UserServiceModel.class);
+        UserServiceModel userServiceModel1 = this.mapper.map(this.userRepository.save(user), UserServiceModel.class);
+        userRepository.flush();
+        return userServiceModel1;
     }
 
     @Override
