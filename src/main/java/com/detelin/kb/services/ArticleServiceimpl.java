@@ -10,6 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ArticleServiceimpl  implements ArticleService{
     private final ArticleRepository articleRepository;
@@ -46,12 +48,23 @@ public class ArticleServiceimpl  implements ArticleService{
     public ArticleViewModel createArticle(ArticleCreateBindingModel articleCreateBindingModel, String _authorName) {
         articleCreateBindingModel.setAuthor(userRepository.findByUsername(_authorName).orElse(null));
         Article savedArticle = articleRepository.save(this.mapper.map(articleCreateBindingModel, Article.class));
+        articleRepository.flush();
         return mapper.map(savedArticle,ArticleViewModel.class);
     }
 
     @Override
     public ArticleViewModel viewArticle(String id) {
         return mapper.map(articleRepository.findById(id).orElse(null),ArticleViewModel.class);
+    }
+
+    @Override
+    public void editArticle(ArticleViewModel articleViewModel) {
+        Article article = articleRepository.findById(articleViewModel.getId()).orElse(null);
+        article.setDescription(articleViewModel.getDescription());
+        article.setTitle(articleViewModel.getTitle());
+        article.setWorkaround(articleViewModel.getWorkaround());
+        article.setLongText(articleViewModel.getLongText());
+        articleRepository.saveAndFlush(article);
     }
 
 }

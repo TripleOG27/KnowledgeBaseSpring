@@ -14,4 +14,6 @@ public interface ArticleService {
 
     ArticleViewModel createArticle(ArticleCreateBindingModel articleServiceModel, String authorName);
     ArticleViewModel viewArticle(String id);
+
+    void editArticle(ArticleViewModel articleViewModel);
 }

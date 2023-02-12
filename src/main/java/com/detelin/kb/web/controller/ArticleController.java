@@ -62,5 +62,13 @@ public class ArticleController extends BaseController{
         modelAndView.addObject("article",articleService.viewArticle(id));
         return super.view("article/articleView",modelAndView);
     }
+    @PostMapping("/edit/{id}")
+    @PageTitle("Edit Article")
+    @PreAuthorize(value = "isAuthenticated()")
+    public ModelAndView editArticle(@PathVariable String id, ModelAndView modelAndView,@ModelAttribute ArticleViewModel articleViewModel){
+        articleService.editArticle(articleViewModel);
+        modelAndView.addObject("article",articleViewModel);
+        return super.redirect("/articles/view/" + articleViewModel.getId());
+    }
 
 }
