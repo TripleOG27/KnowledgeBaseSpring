@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,6 +19,17 @@ public class User extends BaseEntity implements UserDetails {
     private UserStatus status;
     private LocalDate created;
     private Set<Role> authorities;
+    private Group group;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
 
     public User() {
     }

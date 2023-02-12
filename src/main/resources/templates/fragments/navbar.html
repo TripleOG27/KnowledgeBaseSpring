@@ -36,7 +36,10 @@
                     </li>
                     <!--root role to be able to manage users-->
                     <th:block sec:authorize="hasAuthority('ROLE_ROOT')">
-                        <a class="nav-tabs" th:href="@{/user/userList}">Manage Users and Groups</a>
+                        <a class="nav-tabs" th:href="@{/user/userList}">Manage Users</a>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyRole('ROLE_EDITOR','ROLE_ROOT')">
+                        <a class="nav-tabs" th:href="@{/groups/list}">Manage Groups</a>
                     </th:block>
                     <th:block sec:authorize="hasAuthority('AUTHOR_ROLE')">
                         <li class="nav-item active">
@@ -65,12 +68,6 @@
                     </th:block>
                     <th:block sec:authorize="hasAuthority('ROLE_CLIENT')">
                         <a class="nav-tabs" th:href="@{/licenses/my}">My Licenses</a>
-                    </th:block>
-                    <th:block sec:authorize="hasAnyRole('ROLE_ROOT','ROLE_TSM')">
-                        <li class="nav-item active">
-                            <a class="nav-tabs" th:href="@{/user/all}">All Users</a>
-                        </li>
-
                     </th:block>
                     <li class="nav-item active">
                         <form action="/logout?login" method="post">
