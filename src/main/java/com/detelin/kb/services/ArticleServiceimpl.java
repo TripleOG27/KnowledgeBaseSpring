@@ -7,10 +7,12 @@ import com.detelin.kb.domain.models.view.ArticleViewModel;
 import com.detelin.kb.domain.repositories.ArticleRepository;
 import com.detelin.kb.domain.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleServiceimpl  implements ArticleService{
@@ -40,8 +42,8 @@ public class ArticleServiceimpl  implements ArticleService{
     }
 
     @Override
-    public List<ArticleServiceModel> findAll() {
-        return null;
+    public List<ArticleViewModel> findAll() {
+        return articleRepository.findAll().stream().map(a->mapper.map(a,ArticleViewModel.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -66,5 +68,12 @@ public class ArticleServiceimpl  implements ArticleService{
         article.setLongText(articleViewModel.getLongText());
         articleRepository.saveAndFlush(article);
     }
+
+    @Override
+    public List<ArticleViewModel> findAllByAuthorId(String id) {
+        List<Article> allByAuthorId = articleRepository.findAllByAuthorId(id);
+        return allByAuthorId.stream().map(a->mapper.map(a,ArticleViewModel.class)).collect(Collectors.toList());
+    }
+
 
 }

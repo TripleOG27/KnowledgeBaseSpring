@@ -70,5 +70,19 @@ public class ArticleController extends BaseController{
         modelAndView.addObject("article",articleViewModel);
         return super.redirect("/articles/view/" + articleViewModel.getId());
     }
+    @GetMapping("/articles_by_author")
+    @PreAuthorize(value = "isAuthenticated()")
+    public ModelAndView showArticlesByAuthor(@RequestParam(name = "author",required = false)String id,ModelAndView modelAndView,Principal principal){
+        /*
+        If called by the navbar, then we do not pass a param and list all articles created by the logged-in user
+        If called from the list of articles, then we pass the author id as param and list the articles for this specific author
+         */
+        if(null==id){
+            id=userService.findUserByUsername(principal.getName()).getId();
+        }
+        modelAndView.addObject("articles",this.articleService.findAllByAuthorId(id));
+        modelAndView.addObject("username",principal.getName());
+        return super.view("article/all_articles",modelAndView);
+    }
 
 }
