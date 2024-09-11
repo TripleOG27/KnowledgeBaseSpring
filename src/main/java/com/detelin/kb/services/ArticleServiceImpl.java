@@ -7,20 +7,18 @@ import com.detelin.kb.domain.models.view.ArticleViewModel;
 import com.detelin.kb.domain.repositories.ArticleRepository;
 import com.detelin.kb.domain.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ArticleServiceimpl  implements ArticleService{
+public class ArticleServiceImpl implements ArticleService{
     private final ArticleRepository articleRepository;
     private final ModelMapper mapper;
     private final UserRepository userRepository;
 
-    public ArticleServiceimpl(ArticleRepository articleRepository, ModelMapper mapper, UserRepository userRepository) {
+    public ArticleServiceImpl(ArticleRepository articleRepository, ModelMapper mapper, UserRepository userRepository) {
         this.articleRepository = articleRepository;
         this.mapper = mapper;
         this.userRepository = userRepository;
@@ -28,7 +26,8 @@ public class ArticleServiceimpl  implements ArticleService{
 
     @Override
     public List<ArticleServiceModel> findArticleByTitle(String wordInTitle) {
-        return null;
+        return articleRepository.findByPatternInTitle(wordInTitle).stream()
+                .map(a -> mapper.map(a, ArticleServiceModel.class)).toList();
     }
 
     @Override
