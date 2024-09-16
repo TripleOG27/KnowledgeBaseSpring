@@ -1,12 +1,18 @@
 package com.detelin.kb.domain.entities;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "articles")
-public class Article extends BaseEntity{
+//@Builder
+//@Setter
+//@Getter
+public class ArticleEntity extends BaseEntity {
     private String title;
     private User author;
     private String description;
@@ -14,7 +20,7 @@ public class Article extends BaseEntity{
     private String workaround;
     private LocalDate createdDate;
 
-    public Article() {
+    public ArticleEntity() {
     }
     @Column(name = "title",nullable = false)
     public String getTitle() {
@@ -58,7 +64,7 @@ public class Article extends BaseEntity{
     public void setWorkaround(String workaround) {
         this.workaround = workaround;
     }
-    @Column(name = "created_date",columnDefinition = "DATE",nullable = false)
+    @Column(name = "created_date", columnDefinition = "DATE", nullable = false)
     public LocalDate getCreatedDate() {
         return createdDate;
     }

@@ -1,22 +1,19 @@
 package com.detelin.kb.services;
 
-import com.detelin.kb.domain.models.binding.ArticleCreateBindingModel;
-import com.detelin.kb.domain.models.service.ArticleServiceModel;
-import com.detelin.kb.domain.models.view.ArticleViewModel;
-import org.springframework.data.jpa.repository.Query;
+import com.detelin.kb.domain.dto.ArticleDto;
 
 import java.util.List;
 
 public interface ArticleService {
-    List<ArticleServiceModel> findArticleByTitle(String wordInTitle);
-    List<ArticleServiceModel> findArticleByKeyWorkd(String wordInSteps);
-    List<ArticleServiceModel> findArticleByWordInDescription(String wordInDescription);
-    List<ArticleViewModel> findAll();
+    List<ArticleDto> findArticleByTitle(String wordInTitle);
+    List<ArticleDto> findArticleByKeyWord(String wordInSteps);
+    List<ArticleDto> findArticleByWordInDescription(String wordInDescription);
+    List<ArticleDto> findAll();
 
-    ArticleViewModel createArticle(ArticleCreateBindingModel articleServiceModel, String authorName);
-    ArticleViewModel viewArticle(String id);
+    ArticleDto createArticle(ArticleDto articleDto, String authorName);
+    ArticleDto viewArticle(String id);
 
-    void editArticle(ArticleViewModel articleViewModel);
+    void editArticle(ArticleDto articleViewModel);
 
-    List<ArticleViewModel> findAllByAuthorId(String id);
+    List<ArticleDto> findAllByAuthorId(String id);
 }
