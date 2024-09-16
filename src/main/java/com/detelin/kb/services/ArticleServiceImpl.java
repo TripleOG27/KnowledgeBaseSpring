@@ -5,6 +5,7 @@ import com.detelin.kb.domain.entities.ArticleEntity;
 import com.detelin.kb.domain.repositories.ArticleRepository;
 import com.detelin.kb.domain.repositories.UserRepository;
 import com.detelin.kb.services.mapper.ArticleMapper;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -53,8 +54,11 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     @Override
-    public void editArticle(ArticleDto dto) {
+    public void editArticle(ArticleDto dto) throws EntityNotFoundException {
         ArticleEntity articleEntity = articleRepository.findById(dto.getId()).orElse(null);
+        if (null == articleEntity) {
+            throw new EntityNotFoundException(String.format("Article with id %s not found", dto.getId()));
+        }
         articleEntity.setDescription(dto.getDescription());
         articleEntity.setTitle(dto.getTitle());
         articleEntity.setWorkaround(dto.getWorkaround());

@@ -4,6 +4,7 @@ import com.detelin.kb.domain.dto.ArticleDto;
 import com.detelin.kb.services.ArticleService;
 import com.detelin.kb.services.UserService;
 import com.detelin.kb.web.annotations.PageTitle;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class Article {
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
     @PageTitle("Create an article")
-    public ResponseEntity<ArticleDto> createArticle(ArticleDto dto, Principal principal){
+    public ResponseEntity<ArticleDto> createArticle(@RequestBody ArticleDto dto, Principal principal){
         return ResponseEntity.ok(articleService.createArticle(dto, principal.getName()));
     }
 
@@ -40,13 +41,15 @@ public class Article {
     public ResponseEntity<ArticleDto> viewArticle(@PathVariable String id){
         return ResponseEntity.ok(articleService.viewArticle(id));
     }
+
     @PostMapping("/edit/{id}")
     @PageTitle("Edit Article")
     @PreAuthorize(value = "isAuthenticated()")
-    public ResponseEntity<ArticleDto> editArticle(@PathVariable String id, @ModelAttribute ArticleDto dto){
+    public ResponseEntity<ArticleDto> editArticle(@PathVariable String id, @RequestBody ArticleDto dto) throws EntityNotFoundException {
         articleService.editArticle(dto);
         return ResponseEntity.ok(dto);
     }
+
     private String getLoggedInUserId(Principal principal){
         return userService.findUserByUsername(principal.getName()).getId();
     }
