@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
-    private final GroupRepository groupRepository;
+     private final GroupRepository groupRepository;
     private final RoleService roleService;
     private final GroupMapper mapper;
 

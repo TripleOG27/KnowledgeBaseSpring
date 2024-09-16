@@ -21,7 +21,7 @@ public class User {
 
     @PostMapping("/register")
     @PreAuthorize("isAnonymous()")
-    public ResponseEntity<UserDto> register(@ModelAttribute UserDto dto) {
+    public ResponseEntity<UserDto> register(@RequestBody UserDto dto) {
         if (!dto.getPassword().equals(dto.getConfirmPassword())) {
             throw new InputMismatchException();
         }
@@ -31,14 +31,14 @@ public class User {
 
     @PostMapping("/login")
     @PreAuthorize("isAnonymous()")
-    public ResponseEntity<UserDto> login(@ModelAttribute UserDto dto) {
+    public ResponseEntity<UserDto> login(@RequestBody UserDto dto) {
         UserDto userDto = userService.userLogin(dto);
         return ResponseEntity.ok(userDto);
     }
 
     @PostMapping("/edit")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserDto> editProfile(@ModelAttribute UserDto dto) {
+    public ResponseEntity<UserDto> editProfile(@RequestBody UserDto dto) {
         return ResponseEntity.ok(userService.editUserProfile(dto, dto.getPassword()));
     }
 
