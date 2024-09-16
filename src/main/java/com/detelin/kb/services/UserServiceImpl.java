@@ -1,51 +1,45 @@
 package com.detelin.kb.services;
 
 import com.detelin.kb.GlobalConstants;
+import com.detelin.kb.domain.dto.UserDto;
 import com.detelin.kb.domain.entities.User;
 import com.detelin.kb.domain.enums.UserStatus;
-import com.detelin.kb.domain.models.service.UserServiceModel;
 import com.detelin.kb.domain.repositories.UserRepository;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.detelin.kb.services.mapper.UserMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.InputMismatchException;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService{
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
-    private final ModelMapper mapper;
+    private final UserMapper mapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, RoleService roleService, ModelMapper mapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userRepository = userRepository;
-        this.roleService = roleService;
-        this.mapper = mapper;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
     @Override
-    public UserServiceModel registerUser(UserServiceModel userServiceModel) {
-        this.roleService.seedRolesInDB();
-        if(this.userRepository.count()==0){
-            userServiceModel.setAuthorities(this.roleService.findAllRoles());
-        }else {
-            userServiceModel.setAuthorities(new LinkedHashSet<>());
-            userServiceModel.getAuthorities().add(this.roleService.findByAuthority(GlobalConstants.AUTHOR_ROLE));
+    public UserDto registerUser(UserDto dto) {
+        roleService.seedRolesInDB();
+        User user = mapper.toEntity(dto);
+        if (this.userRepository.count()==0) {
+            user.setAuthorities(this.roleService.findAllRoles());
+        } else {
+            user.setAuthorities(new LinkedHashSet<>());
+            user.getAuthorities().add(this.roleService.findByAuthority(GlobalConstants.AUTHOR_ROLE));
         }
-        User user = this.mapper.map(userServiceModel,User.class);
-        user.setPassword(this.bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
+        user.setPassword(this.bCryptPasswordEncoder.encode(dto.getPassword()));
         user.setStatus(UserStatus.ACTIVE);
         user.setCreated(LocalDate.now());
-        UserServiceModel userServiceModel1 = this.mapper.map(this.userRepository.save(user), UserServiceModel.class);
-        userRepository.flush();
-        return userServiceModel1;
+        dto.setId(userRepository.saveAndFlush(user).getId());
+        return dto;
     }
 
     @Override
@@ -56,62 +50,62 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserServiceModel findUserByUsername(String username) {
+    public UserDto findUserByUsername(String username) {
 
-        return this.userRepository.findByUsername(username).map(u->this.mapper.map(u,UserServiceModel.class))
+        return this.userRepository.findByUsername(username).map(mapper::toDto)
                 .orElseThrow(()->new UsernameNotFoundException("User not found"));
     }
 
     @Override
-    public List<UserServiceModel> findAllUsers() {
-        return this.userRepository.findAll().stream().map(u -> this.mapper.map(u, UserServiceModel.class)).collect(Collectors.toList());
+    public List<UserDto> findAllUsers() {
+        return this.userRepository.findAll().stream().map(mapper::toDto).toList();
     }
 
     @Override
-    public UserServiceModel findUserById(String id) {
-        return this.userRepository.findById(id).map(u->this.mapper.map(u,UserServiceModel.class))
+    public UserDto findUserById(String id) {
+        return this.userRepository.findById(id).map(mapper::toDto)
                 .orElseThrow(()->new UsernameNotFoundException("User not found"));
     }
 
     @Override
     public void setUserRole(String id, String role) {
-        UserServiceModel userServiceModel = this.mapper.map(
-                this.userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("User not found"))
-                ,UserServiceModel.class);
-        userServiceModel.getAuthorities().clear();
-        userServiceModel.getAuthorities().add(this.roleService.findByAuthority(role+"_ROLE"));
-        User user = this.mapper.map(userServiceModel,User.class);
-        this.userRepository.saveAndFlush(user);
-
-
+        User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        user.getAuthorities().clear();
+        user.getAuthorities().add(roleService.findByAuthority(role + "_ROLE"));
+        userRepository.saveAndFlush(user);
     }
 
     @Override
     public void setStatus(String id, String status) {
-        UserServiceModel userServiceModel = this.mapper.map(
-                this.userRepository.findById(id).orElseThrow(()->new UsernameNotFoundException("User not found"))
-                ,UserServiceModel.class);
-
-        userServiceModel.setStatus(UserStatus.valueOf(status));
-        User user = this.mapper.map(userServiceModel,User.class);
+        User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        user.setStatus(UserStatus.valueOf(status));
         this.userRepository.saveAndFlush(user);
     }
 
     @Override
-    public UserServiceModel editUserProfile(UserServiceModel userServiceModel, String oldPassword) {
-        User user = this.userRepository.findByUsername(userServiceModel.getUsername())
+    public UserDto editUserProfile(UserDto dto, String oldPassword) {
+        User user = this.userRepository.findByUsername(dto.getUsername())
                 .orElseThrow(()-> new UsernameNotFoundException("Username not found!"));
 
-        if (!this.bCryptPasswordEncoder.matches(oldPassword, user.getPassword())) {
+        if (!bCryptPasswordEncoder.matches(oldPassword, user.getPassword())) {
             throw new IllegalArgumentException("Incorrect password!");
         }
 
-        user.setPassword(!"".equals(userServiceModel.getPassword()) ?
-                this.bCryptPasswordEncoder.encode(userServiceModel.getPassword()) :
+        user.setPassword(!"".equals(dto.getPassword()) ?
+                this.bCryptPasswordEncoder.encode(dto.getPassword()) :
                 user.getPassword());
-        user.setEmail(userServiceModel.getEmail());
+        user.setEmail(dto.getEmail());
 //        user.setImageUrl(userServiceModel.getImageUrl());
 
-        return this.mapper.map(this.userRepository.saveAndFlush(user), UserServiceModel.class);
+        return this.mapper.toDto(this.userRepository.saveAndFlush(user));
+    }
+
+    @Override
+    public UserDto userLogin(UserDto dto) {
+        User user = userRepository.findByUsername(dto.getUsername()).orElse(null);
+        if (null == user || !bCryptPasswordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new InputMismatchException();
+        }
+        return mapper.toDto(user);
     }
 }

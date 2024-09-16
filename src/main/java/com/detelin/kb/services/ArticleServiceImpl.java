@@ -1,77 +1,71 @@
 package com.detelin.kb.services;
 
-import com.detelin.kb.domain.entities.Article;
-import com.detelin.kb.domain.models.binding.ArticleCreateBindingModel;
-import com.detelin.kb.domain.models.service.ArticleServiceModel;
-import com.detelin.kb.domain.models.view.ArticleViewModel;
+import com.detelin.kb.domain.dto.ArticleDto;
+import com.detelin.kb.domain.entities.ArticleEntity;
 import com.detelin.kb.domain.repositories.ArticleRepository;
 import com.detelin.kb.domain.repositories.UserRepository;
-import org.modelmapper.ModelMapper;
+import com.detelin.kb.services.mapper.ArticleMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService{
     private final ArticleRepository articleRepository;
-    private final ModelMapper mapper;
+    private final ArticleMapper mapper;
     private final UserRepository userRepository;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository, ModelMapper mapper, UserRepository userRepository) {
-        this.articleRepository = articleRepository;
-        this.mapper = mapper;
-        this.userRepository = userRepository;
-    }
-
     @Override
-    public List<ArticleServiceModel> findArticleByTitle(String wordInTitle) {
+    public List<ArticleDto> findArticleByTitle(String wordInTitle) {
         return articleRepository.findByPatternInTitle(wordInTitle).stream()
-                .map(a -> mapper.map(a, ArticleServiceModel.class)).toList();
+                .map(mapper::toDto).toList();
     }
 
     @Override
-    public List<ArticleServiceModel> findArticleByKeyWorkd(String wordInSteps) {
+    public List<ArticleDto> findArticleByKeyWord(String wordInSteps) {
         return null;
     }
 
     @Override
-    public List<ArticleServiceModel> findArticleByWordInDescription(String wordInDescription) {
+    public List<ArticleDto> findArticleByWordInDescription(String wordInDescription) {
         return null;
     }
 
     @Override
-    public List<ArticleViewModel> findAll() {
-        return articleRepository.findAll().stream().map(a->mapper.map(a,ArticleViewModel.class)).collect(Collectors.toList());
+    public List<ArticleDto> findAll() {
+        return articleRepository.findAll().stream().map(mapper::toDto).toList();
     }
 
     @Override
-    public ArticleViewModel createArticle(ArticleCreateBindingModel articleCreateBindingModel, String _authorName) {
-        articleCreateBindingModel.setAuthor(userRepository.findByUsername(_authorName).orElse(null));
-        Article savedArticle = articleRepository.save(this.mapper.map(articleCreateBindingModel, Article.class));
-        articleRepository.flush();
-        return mapper.map(savedArticle,ArticleViewModel.class);
+    public ArticleDto createArticle(ArticleDto dto, String authorName) {
+        ArticleEntity articleEntity = mapper.toEntity(dto);
+        articleEntity.setAuthor(userRepository.findByUsername(authorName).orElse(null));
+        articleRepository.saveAndFlush(articleEntity);
+        dto.setAuthor(authorName);
+        return dto;
     }
 
     @Override
-    public ArticleViewModel viewArticle(String id) {
-        return mapper.map(articleRepository.findById(id).orElse(null),ArticleViewModel.class);
+    public ArticleDto viewArticle(String id) {
+        return mapper.toDto(articleRepository.findById(id).orElse(null));
     }
 
     @Override
-    public void editArticle(ArticleViewModel articleViewModel) {
-        Article article = articleRepository.findById(articleViewModel.getId()).orElse(null);
-        article.setDescription(articleViewModel.getDescription());
-        article.setTitle(articleViewModel.getTitle());
-        article.setWorkaround(articleViewModel.getWorkaround());
-        article.setLongText(articleViewModel.getLongText());
-        articleRepository.saveAndFlush(article);
+    public void editArticle(ArticleDto dto) {
+        ArticleEntity articleEntity = articleRepository.findById(dto.getId()).orElse(null);
+        articleEntity.setDescription(dto.getDescription());
+        articleEntity.setTitle(dto.getTitle());
+        articleEntity.setWorkaround(dto.getWorkaround());
+        articleEntity.setLongText(dto.getLongText());
+        articleRepository.saveAndFlush(articleEntity);
     }
 
     @Override
-    public List<ArticleViewModel> findAllByAuthorId(String id) {
-        List<Article> allByAuthorId = articleRepository.findAllByAuthorId(id);
-        return allByAuthorId.stream().map(a->mapper.map(a,ArticleViewModel.class)).collect(Collectors.toList());
+    public List<ArticleDto> findAllByAuthorId(String id) {
+        List<ArticleEntity> allByAuthorId = articleRepository.findAllByAuthorId(id);
+        return allByAuthorId.stream().map(mapper::toDto).toList();
     }
 
 
