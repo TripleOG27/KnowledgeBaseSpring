@@ -55,7 +55,7 @@ public class Article {
     }
 
     @GetMapping(value = "/search", params = {"pattern"},
-            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public ResponseEntity<List<ArticleDto>> searchArticles(@RequestParam String pattern) {
         return ResponseEntity.ok(articleService.findArticleByTitle(pattern));
